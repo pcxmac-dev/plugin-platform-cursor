@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "47 6 * * 1"  # weekly: the vendor's pages read again (the tables' prices, plans and models)
+
+env:
+  # the library release it is tested against (its plugin API): the release branch until a tag is pinned
+  LIMINAL_LIB_REF: release/0.2.0
+  # the weekly run reads Cursor's public pricing, plans and SDK pages and fails when the written-in tables no
+  # longer match them (tests/test_vendor_pages.py); pushes and pull requests send nothing
+  LIMINAL_VENDOR_PAGES: ${{ github.event_name == 'schedule' && '1' || '' }}
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12", "3.15"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install "liminal-libs @ git+https://github.com/pcxmac-dev/liminal-libs@${{ env.LIMINAL_LIB_REF }}"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest -q
+
+  sdk:
+    # the Cursor SDK's surface the runtime relies on (tests/test_sdk_surface.py), read from the release the sdk
+    # extra installs: its options, its client and its errors by signature; no bridge is started, nothing is sent.
+    # Windows is x64 only for the bridge: the runners are.
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "liminal-libs @ git+https://github.com/pcxmac-dev/liminal-libs@${{ env.LIMINAL_LIB_REF }}"
+      - run: python -m pip install -e ".[dev,sdk]"
+      - run: python -m pytest -q tests/test_sdk_surface.py tests/test_cursor.py tests/test_contract.py
