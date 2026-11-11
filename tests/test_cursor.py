@@ -38,7 +38,7 @@ def test_it_loads_as_an_assistant_plugin(installed):
     found = installed(ASSISTANT)
     assert list(found) == ["cursor"] and isinstance(found["cursor"], CursorPlugin)
     p = found["cursor"]
-    assert p.KIND == "assistant" and p.SYSTEM == "platform" and p.api == "2.0" and p.vendor == "Cursor"
+    assert p.KIND == "assistant" and p.SYSTEM == "platform" and p.api == "2.2" and p.vendor == "Cursor"
     assert p.origin == "package: plugin_platform_cursor" and p.order == 504
     import liminal_libs
 

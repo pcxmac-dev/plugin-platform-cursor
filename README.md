@@ -1,6 +1,6 @@
 # plugin-platform-cursor
 
-Cursor for [Liminal](https://github.com/pcxmac-dev/liminal-charts): an AI assistant plugin (plugin API 2.0,
+Cursor for [Liminal](https://github.com/pcxmac-dev/liminal-charts): an AI assistant plugin (plugin API 2.2,
 `liminal_libs.assistants`, a platform plugin) that evaluates standardized arguments (a question over headlines, an
 assessment, a report; a judge over earlier answers) through Cursor's models on your own Cursor API key, with
 Cursor's plans, models and prices written in.
@@ -40,6 +40,20 @@ are three ways an agent answers on your own key, and this plugin takes the most 
   `CURSOR_API_KEY`). Print mode has every tool, write and shell among them, and ask mode, read-only, still reads
   files. Its JSON output documents no token counts. A long argument would go on a command line, which Windows limits
   to 32,767 characters. It was not used, so no CLI is needed.
+
+## Its API
+
+The plugin attaches to Cursor's [Python SDK](https://cursor.com/docs/sdk/python) (`cursor-sdk` 1.x):
+`CursorClient.connect`, `Cursor.me`, `Cursor.models.list` and `Agent.prompt`. What it reaches is Cursor's agent and
+models, billed from your plan's pool ([models and pricing](https://cursor.com/docs/models-and-pricing); no rate limits
+are published for the SDK), beside Cursor's REST APIs ([overview](https://cursor.com/docs/api)); its status is at
+[status.cursor.com](https://status.cursor.com/). The local bridge it talks to is the
+[SDK Bridge](https://cursor.com/docs/sdk/bridge) ([cursor/sdk-bridge](https://github.com/cursor/sdk-bridge)), which the
+plugin starts and stops itself.
+
+`CursorPlugin.apis` (`apis.py`, plugin API 2.2) says this on the plugin's page as two cards, the SDK and the bridge,
+with every other part of them (the cloud runtime, MCP servers, subagents, hooks, the Cloud Agents API, the bridge's
+callback services ...) and the calls the plugin makes among the others, as read on 2026-11-11.
 
 ## Setup
 

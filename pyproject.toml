@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "plugin-platform-cursor"
-version = "0.1.0"  # the plugin's own release (CHANGELOG.md); the app shows it on the Plugins view
+version = "0.2.0"  # the plugin's own release (CHANGELOG.md); the app shows it on the Plugins view
 description = "Cursor for Liminal: Cursor's models through the Cursor SDK, evaluating standardized arguments on your own Cursor API key, with the plans, models and prices written in."
 readme = "README.md"
 requires-python = ">=3.10"  # the Cursor SDK's own floor, and the library's
-# the library it plugs into (the AI assistant kind: liminal_libs.assistants, plugin API 2.0); 1.40.0: its icon
-dependencies = ["liminal-libs>=1.40.0"]
+# the library it plugs into (the AI assistant kind: liminal_libs.assistants, plugin API 2.2); 1.49.0: its cards
+dependencies = ["liminal-libs>=1.49.0"]
 
 [project.optional-dependencies]
 # the Cursor SDK: what reaches Cursor (its wheel carries the bridge, cursor-sdk-bridge, which the plugin starts

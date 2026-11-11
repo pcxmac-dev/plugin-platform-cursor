@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.0 (2026-11-11)
+
+Its API on its page (plugin API 2.2, liminal-libs 1.49.0; the user: "each plugin should reflect the the API its attached
+to, and present links that provide documentation, the plugin interface should more or less contain what it already
+has, BUT, it should also expose more of what the API is about"). `CursorPlugin.apis` (apis.py) holds two cards, from
+Cursor's pages, verified 2026-11-11:
+- the Cursor Python SDK: what it is (Cursor's agent, not a model-inference API), the package and the 1.x release it is
+  written for, how the key is given, the limits (none published for the SDK; the plans' pools), what it costs, and
+  Cursor's pages (the Python SDK, the APIs overview, PyPI, the TypeScript SDK, the SDK's release notes, service
+  accounts, models and pricing, the legacy plans, the status page, the dashboard's API keys and usage, the terms);
+  every part of it (the agent, runs, token usage, the Cursor namespace, the client, model selection, tools and
+  settings, errors and Cursor's models and pricing, which the plugin uses; the cloud runtime, MCP servers and
+  subagents, hooks and artifacts, the Cloud Agents API and Cursor's other APIs, which it does not) and its calls
+  (`CursorClient.connect`, `Cursor.me`, `Cursor.models.list`, `Agent.prompt`, and others);
+- the Cursor SDK Bridge it talks to (cursor-sdk-bridge, started and stopped by the plugin): its handshake, services
+  (agent, Cursor, control), local agent store, callbacks, streaming, errors and versioning, and its calls (the command
+  line, the ready line, `Shutdown`, and the RPCs the SDK's calls are made of), with cursor/sdk-bridge's pages.
+
+`PRICING`, `LEGACY_PAGE`, `API_PAGE`, `SDK_PAGE` and `BRIDGE_PAGE` come from apis.py. Nothing it sends or shows changes;
+the instance keeps nothing of a run, so `api_facts()` says nothing. Needs liminal-libs>=1.49.0. A test runs the real
+runtime on the fake SDK, bridge and Shutdown and checks that the cards name exactly what it calls; the weekly page check
+asks each address too.
+
 ## 0.1.0 (2026-11-09)
 
 The first release (the user: "lets add an AI plugin for cursor"): `CursorPlugin` (an `AssistantPlugin`, plugin API 2.0)

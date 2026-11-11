@@ -1,8 +1,8 @@
 """The weekly check (CI's schedule, LIMINAL_VENDOR_PAGES=1): Cursor's public pages read again, each written-in figure
 looked for (verify.check_sources); and every model's prices (at standard speed, at Fast speed, Grok 4.7's long
 context) and every plan's price compared with the tables row by row. A figure gone or changed means the table is
-stale and the plugin needs a release; the failure names the model or the plan. Nothing is read on a push or a pull
-request."""
+stale and the plugin needs a release; the failure names the model or the plan. And every address on the plugin's
+cards (apis.py) asked once. Nothing is read on a push or a pull request."""
 from __future__ import annotations
 
 import os
@@ -73,3 +73,11 @@ def test_every_plans_price_is_still_the_pages():
         if not re.search(rf"{re.escape(title)} \${month}/mo", legacy):
             wrong.append(f"{title} (legacy): no longer ${month}/mo")
     assert wrong == [], "the table is stale:\n" + "\n".join(wrong)
+
+
+def test_every_address_on_the_cards_answers():
+    """Each address on the cards asked once (sources.apis.dead_links)."""
+    from liminal_libs.sources.apis import dead_links
+    from plugin_platform_cursor.apis import APIS
+
+    assert dead_links(APIS) == []

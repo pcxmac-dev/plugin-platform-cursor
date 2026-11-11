@@ -1,10 +1,11 @@
-"""Cursor for Liminal: an AI assistant plugin (liminal_libs.assistants, plugin API 2.0) that evaluates
+"""Cursor for Liminal: an AI assistant plugin (liminal_libs.assistants, plugin API 2.2) that evaluates
 standardized arguments through Cursor's models on your own Cursor API key, by the Cursor SDK, with
 Cursor's plans, models and prices written in, dated, and checked against Cursor's pages.
 
 A Liminal plugin released on its own, registered under the entry point group `liminal.providers` as
 `cursor`: the plugin `CursorPlugin` (ASSISTANT below), its assistant `CursorAssistant` (assistant.py),
-the SDK and its bridge driven by runtime.py. It relies on plugin API 2.0 and nothing of the apps.
+the SDK and its bridge driven by runtime.py, what it attaches to its cards (apis.py: the Cursor SDK, what it reaches
+and the bridge it talks to, their pages). It relies on plugin API 2.2 and nothing of the apps.
 
 The user, 2026-11-09: "lets add an AI plugin for cursor", beside the assistants asked for on 2026-11-03
 ("AI plugins that have a vanilla API, are compliant with the rest of the plugin structure (setup /
@@ -49,12 +50,13 @@ from liminal_libs.assistants import AssistantPlugin, Caps, Model, Plan, Source
 from liminal_libs.layout import Database
 from liminal_libs.sources.keys import KeyVar
 
+from .apis import API_PAGE, APIS, BRIDGE_PAGE, LEGACY_PAGE, PRICING, SDK_PAGE
 from .assistant import KEY_PREFIX, CursorAssistant
 from .runtime import SDK_WRITTEN_FOR, SdkRuntime
 
 __all__ = ["ASSISTANT", "CursorPlugin", "CursorAssistant", "PLANS", "MODELS", "SOURCES", "VERIFIED", "SUBSCRIPTION",
            "LEGACY", "FAST", "LONG_CONTEXT", "CURSOR_MODELS", "PRICING", "LEGACY_PAGE", "API_PAGE", "SDK_PAGE",
-           "BRIDGE_PAGE", "PROTOCOL", "RUNTIME_HOME", "SDK_WRITTEN_FOR", "KEY_PREFIX"]
+           "BRIDGE_PAGE", "PROTOCOL", "RUNTIME_HOME", "SDK_WRITTEN_FOR", "KEY_PREFIX", "APIS"]
 
 VERIFIED = "2026-11-09"  # the day the tables below were checked against SOURCES
 RUNTIME_HOME = "assistants/cursor/"  # the bridge's empty workspace and its agents' state, in the data folder
@@ -159,11 +161,8 @@ MODELS = (
                f"{UNPUBLISHED.format(id='grok-4.7')}; {_fast('grok-4.7')}"),
 )
 
-PRICING = "https://cursor.com/docs/models-and-pricing"
-LEGACY_PAGE = "https://cursor.com/docs/account/pricing/legacy-cursor-plans"
-API_PAGE = "https://cursor.com/docs/api"
-SDK_PAGE = "https://cursor.com/docs/sdk/python"
-BRIDGE_PAGE = "https://cursor.com/docs/sdk/bridge"
+# PRICING, LEGACY_PAGE, API_PAGE, SDK_PAGE and BRIDGE_PAGE (apis.py): the pricing, legacy plans, APIs, Python SDK
+# and bridge pages; PROTOCOL, the bridge's protocol as text (the weekly check reads it)
 PROTOCOL = "https://raw.githubusercontent.com/cursor/sdk-bridge/main/docs/protocol.md"
 
 # Where the tables come from, with what each page must still show (verify.check_sources, weekly in CI; the models'
@@ -204,7 +203,8 @@ class CursorPlugin(AssistantPlugin):
     vendor = "Cursor"
     signup = "https://cursor.com/dashboard"
     order = 504
-    api = "2.0"
+    api = "2.2"  # 2.2: what it attaches to (apis)
+    apis = APIS  # the Cursor SDK, what it reaches and the bridge it talks to (apis.py)
     assistant = CursorAssistant
     plans = PLANS
     models = MODELS
